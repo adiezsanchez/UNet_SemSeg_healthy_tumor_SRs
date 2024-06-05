@@ -1,0 +1,10 @@
+# Data folders
+Zeiss_Raw_Images
+Zeiss_Raw_Test
+ground_truth_labels
+
+# Resulting test models
+models
+
+# Imports
+__pycache__
