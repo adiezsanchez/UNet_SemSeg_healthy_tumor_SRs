@@ -7,7 +7,7 @@ Semantic segmentation of healthy vs tumor tissue in mouse intestinal swiss rolls
 
 2. Then you will need to create a virtual environment (venv) either using the following command or recreate the environment from the .yml file you can find in the envs folder:
 
-   <code>mamba create --name EMBL_tensorflow python=3.9 devbio-napari csbdeep tensorboard cudatoolkit=11.2 cudnn=8.1.0 -c conda-forge</code>
+   <code>mamba create --name EMBL_tensorflow python=3.9 devbio-napari csbdeep cudatoolkit=11.2 cudnn=8.1.0 -c conda-forge</code>
 
 3. Afterwards you will need to activate the resulting environment and install a few more packages manually via pip install.
 
