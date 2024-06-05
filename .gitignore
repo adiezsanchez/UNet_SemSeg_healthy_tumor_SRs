@@ -1,7 +1,6 @@
 # Data folders
-Zeiss_Raw_Images
-Zeiss_Raw_Test
-ground_truth_labels
+test_data
+train_validation_data
 
 # Resulting test models
 models
