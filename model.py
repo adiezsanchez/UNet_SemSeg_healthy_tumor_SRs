@@ -1,4 +1,4 @@
-#Derived from https://github.com/maweigert/tutorials/blob/main/unet/model.py
+# Derived from https://github.com/maweigert/tutorials/blob/main/unet/model.py
 
 """ 
 A 2D Unet class with some goodies (eg. tiled prediction)
