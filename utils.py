@@ -1,5 +1,15 @@
 import czifile
 import numpy as np
+from tensorflow.python.client import device_lib
+
+# Function to get GPU details
+def get_gpu_details():
+    devices = device_lib.list_local_devices()
+    for device in devices:
+        if device.device_type == 'GPU':
+            print(f"Device name: {device.name}")
+            print(f"Device type: {device.device_type}")
+            print(f"GPU model: {device.physical_device_desc}")
 
 # Input image loader (.czi files)
 def read_czi_image(filename, channels):
