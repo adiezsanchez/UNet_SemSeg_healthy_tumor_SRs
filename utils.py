@@ -2,18 +2,19 @@ import czifile
 import numpy as np
 
 # Input image loader (.czi files)
-def read_czi_image(filename):
+def read_czi_image(filename, channels):
     """Image loader for .czi files, removes singleton dimension and rearranges array axes from ZXY to XYZ.
     This step ensures that the input data conforms to the expected input shape for the UNET model"""
 
     # Read .czi file
-    x = czifile.imread (filename) 
+    x = czifile.imread(filename) 
     # Remove singleton dimensions in the last axis
     x = np.squeeze(x, axis=3) 
     # Rearrange Z axis from first (source, 0) to last (destination, -1) position
     # Tensorflow expects a "channels-last" array (height, width, channels)
     x = np.moveaxis(x, 0, -1) 
-
+    # Select channels to keep based on the channels tuple argument
+    x = x[:, :, channels]
     # Returns a numpy.ndarray of dtype "uint8"
     return x
 
