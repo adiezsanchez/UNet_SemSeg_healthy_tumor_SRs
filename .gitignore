@@ -1,6 +1,8 @@
 # Data folders
 test_data
 train_validation_data
+prediction_tiffs
+prediction_pngs
 
 # Resulting test models
 models
