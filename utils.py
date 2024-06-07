@@ -11,7 +11,7 @@ def get_gpu_details():
             print(f"Device type: {device.device_type}")
             print(f"GPU model: {device.physical_device_desc}")
 
-# Input image loader (.czi files)
+# Input image loader and channel reorg (.czi files)
 def read_czi_image(filename, channels):
     """Image loader for .czi files, removes singleton dimension and rearranges array axes from ZXY to XYZ.
     This step ensures that the input data conforms to the expected input shape for the UNET model"""
@@ -25,6 +25,16 @@ def read_czi_image(filename, channels):
     x = np.moveaxis(x, 0, -1) 
     # Select channels to keep based on the channels tuple argument
     x = x[:, :, channels]
+    # Returns a numpy.ndarray of dtype "uint8"
+    return x
+
+def read_czi_for_napari(filename):
+    """Image loader for .czi files, removes singleton dimension"""
+
+    # Read .czi file
+    x = czifile.imread(filename) 
+    # Remove singleton dimensions in the last axis
+    x = np.squeeze(x, axis=3) 
     # Returns a numpy.ndarray of dtype "uint8"
     return x
 
