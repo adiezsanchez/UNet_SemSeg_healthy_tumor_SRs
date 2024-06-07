@@ -4,8 +4,5 @@ train_validation_data
 prediction_tiffs
 prediction_pngs
 
-# Resulting test models
-models
-
 # Imports
 __pycache__
