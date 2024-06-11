@@ -1,6 +1,8 @@
 import czifile
 import numpy as np
 from tensorflow.python.client import device_lib
+import pandas as pd
+from skimage import measure
 
 # Function to get GPU details
 def get_gpu_details():
@@ -119,3 +121,60 @@ def fix_overlap(raw_masks, f_masks):
         index += 3 # Update the index to keep track of the sample position
                 
     return masks, bh_shared, bt_shared, ht_shared
+
+# Calculate the overall mean intensity of pixels within the combined mask of all labels
+# Using the weighted average of intensity_mean weighted by area
+# This approach effectively simulates merging all labels into one mask and then calculating the mean intensity
+# It performs some extra computations but I can reuse this function to extract per labels stats later on
+
+# Transform extract weighted_intensity_mean into a function
+def extract_weighted_mean_intensity (mask_input, intensity_input):
+
+    labels = measure.label(mask_input)
+
+    label_props = measure.regionprops_table(label_image=labels, intensity_image=intensity_input, properties=["label","area","intensity_mean"])
+
+    df = pd.DataFrame(label_props)
+
+    # Calculate the total area occupied by healthy labels
+    total_area = df['area'].sum()
+
+    weighted_intensity_mean = (df['intensity_mean'] * df['area']).sum() / total_area
+
+    return weighted_intensity_mean
+
+# You can also calculate the overall mean intensity of pixels within the combined mask of all labels directly using a vectorized approach
+
+def extract_mean_intensity(mask_input, intensity_input):
+    # Create a boolean mask where labels are greater than zero
+    mask = mask_input > 0
+    
+    # Extract the relevant pixels from the intensity image using the mask
+    masked_intensity_values = intensity_input[mask]
+    
+    # Compute the mean intensity of these masked pixels
+    intensity_mean = np.mean(masked_intensity_values)
+    
+    return intensity_mean
+
+def calculate_healthy_tumor_percentage(predicted_classes):
+
+    # Extract tumor and background classes as separate arrays
+    tumor_class = predicted_classes == 2
+    healthy_class = predicted_classes == 1
+
+    # Calculate the total number of pixels
+    total_pixels = predicted_classes.size
+
+    # Calculate the number of pixels occupied by tumor and healthy classes
+    tumor_pixels = np.sum(tumor_class)
+    healthy_pixels = np.sum(healthy_class)
+
+    # Calculate the number of pixels occupied by the tissue (healthy + tumor)
+    tissue_pixels = tumor_pixels + healthy_pixels
+
+    # Calculate the percentage of total tissue area occupied by each class
+    tumor_percentage = (tumor_pixels / tissue_pixels) * 100
+    healthy_percentage = (healthy_pixels / tissue_pixels) * 100
+
+    return tumor_percentage, healthy_percentage
